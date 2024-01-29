@@ -1,0 +1,8 @@
+Name: pingservice
+Build: local
+Mongo:
+  Host: localhost
+  Database: configservice
+  Username: bappa
+  Password: bappa
+  Port: 27017
