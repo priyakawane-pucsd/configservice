@@ -3,6 +3,7 @@ Build: local
 Mongo:
   Host: localhost
   Database: configservice
+  Collection: pingPong
   Username: bappa
   Password: bappa
   Port: 27017
