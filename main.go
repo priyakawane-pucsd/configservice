@@ -6,9 +6,11 @@ import (
 	"configservice/repository/mongo"
 	"configservice/service/pingpong"
 	"context"
+	"log"
 
 	_ "configservice/docs"
 
+	"github.com/bappaapp/goutils/logger"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -17,9 +19,8 @@ import (
 func main() {
 	// Initialize Gin router
 	router := gin.Default()
-
 	// Swagger documentation
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("configservice/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	conf := config.LoadConfig()
 	//Initializing repository
@@ -35,5 +36,7 @@ func main() {
 	pingPongController.SetupRouter(router)
 
 	// Start the server
-	router.Run(":8080")
+	logger.Info(context.Background(), "swagger link: http://localhost:%d/configservice/swagger/index.html", 8081)
+	log.Printf("HTTP server started listening on :%d", 8081)
+	router.Run(":8081")
 }

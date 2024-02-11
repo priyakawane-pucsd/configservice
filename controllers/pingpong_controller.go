@@ -4,6 +4,7 @@ import (
 	"configservice/models"
 	"configservice/models/dto"
 	"configservice/service/pingpong"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +22,7 @@ func NewPingPongController(service *pingpong.Service) *PingPongController {
 }
 
 func (c *PingPongController) SetupRouter(router *gin.Engine) {
-	pingPongGroup := router.Group("/ping")
+	pingPongGroup := router.Group("/configservice/ping")
 	{
 		pingPongGroup.GET("/", c.ping)
 		pingPongGroup.POST("/", c.createPing)
@@ -40,8 +41,10 @@ func (c *PingPongController) SetupRouter(router *gin.Engine) {
 // @Produce  json
 // @Success 200 {object} dto.PingResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /ping [get]
+// @Router /configservice/ping/ [get]
 func (c *PingPongController) ping(ctx *gin.Context) {
+	fmt.Println("inside %v", ctx.Request.Method)
+
 	response, err := c.service.Ping(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -59,7 +62,7 @@ func (c *PingPongController) ping(ctx *gin.Context) {
 // @Success 201 {object} dto.PingResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /ping [post]
+// @Router /configservice/ping/ [post]
 func (c *PingPongController) createPing(ctx *gin.Context) {
 	var request struct {
 		Text string `json:"text" binding:"required"`
@@ -86,7 +89,7 @@ func (c *PingPongController) createPing(ctx *gin.Context) {
 // @Success 200 {array} models.PingPong[]
 // @Failure 404 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
-// @Router /ping/all [get]
+// @Router /configservice/all [get]
 func (c *PingPongController) getAllPings(ctx *gin.Context) {
 	pings, err := c.service.GetAllPings(ctx)
 	if err != nil {
@@ -109,7 +112,7 @@ func (c *PingPongController) getAllPings(ctx *gin.Context) {
 // @Success 200 {object} models.PingPong
 // @Failure 500 {object} dto.ErrorResponse
 // @Failure 404 {object} dto.ErrorResponse
-// @Router /ping/{id} [get]
+// @Router /configservice/ping/{id} [get]
 func (c *PingPongController) getPingByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 	ping, err := c.service.GetPingByID(ctx, id)
@@ -135,7 +138,7 @@ func (c *PingPongController) getPingByID(ctx *gin.Context) {
 // @Success 200 {object} dto.PingResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 404 {object} dto.ErrorResponse
-// @Router /ping/{id} [put]
+// @Router /configservice/ping/{id} [put]
 func (c *PingPongController) updatePingByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -167,7 +170,7 @@ func (c *PingPongController) updatePingByID(ctx *gin.Context) {
 // @Success 200 {object} dto.PingResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 404 {object} dto.ErrorResponse
-// @Router /ping/{id} [delete]
+// @Router /configservice/ping/{id} [delete]
 func (c *PingPongController) deletePingByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
